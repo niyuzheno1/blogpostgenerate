@@ -1,0 +1,167 @@
+<div class="WordSection1">
+
+<p class="MsoNormal"><span style="font-size:12.0pt;line-height:107%;font-family:
+&quot;Times New Roman&quot;,serif">I have been migrated my old website from Microsoft
+Azure to Amazon Web Services (AWS). The reason why I did this migration is
+because I considered the cost of website hosting on Azure. It costs around 50 dollars
+per month to host a ASP.NET website. Meanwhile, I <span class="GramE">don’t</span>
+want to pay that much money for hosting a website functioning like a HTML website,
+which granted me to AWS. <o:p></o:p></span></p>
+
+<h1><span class="GramE">What’s</span> new about this site?</h1>
+
+<p class="MsoNormal"><o:p>&nbsp;</o:p></p>
+
+<p class="MsoNormal" style="tab-stops:center 3.25in">I have embedded several JavaScript,
+including <a href="https://cdnjs.com/libraries/highlight.js/">syntax highlighter</a>
+and <a href="http://docs.mathjax.org/en/latest/web/components/combined.html#tex-chtml-component"><span class="SpellE">Tex-chtml</span></a> and <a href="https://getbootstrap.com/"><span class="SpellE">boostrap</span></a> and <a href="https://d3js.org/">d3.js.</a> We
+will see some examples of above. For the old site, it includes d3.js and <span class="SpellE">boostrap</span> and syntax highlighter. However, it does not have <span class="SpellE">Tex-chtml</span>, which helps translate text into latex.</p>
+
+<p class="MsoNormal" style="tab-stops:center 3.25in"><o:p>&nbsp;</o:p></p>
+
+<h1>Example of the four libraries</h1>
+
+<p class="MsoNormal"><o:p>&nbsp;</o:p></p>
+
+<p class="MsoNormal">We have already seen <span class="SpellE">boostrap</span> by
+simply <span class="SpellE">examing</span> this website. <span class="GramE">It’s</span>
+built by <span class="SpellE">boostrap</span>. </p>
+
+<p class="MsoNormal">Now let us example the syntax highlighter of a simple and
+well-known C++ code.</p>
+
+<p class="MsoNormal">C++ code:</p>
+<pre><code class="hljs cpp">
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-comment">// your code goes here</span>
+	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code>
+</pre>
+
+<p class="MsoNormal"><o:p>&nbsp;</o:p></p>
+
+<p class="MsoNormal">How about data visualization from d3.js? Here we adopted
+from the <a href="https://observablehq.com/@niyuzheno1/grouped-bar-chart">post</a>.</p>
+
+<p class="MsoNormal"><o:p>&nbsp;</o:p></p>
+
+
+<svg style="height: 600px; width: 600px;">
+</svg>
+<script>
+    data = Object.assign(d3.csvParse("tmp,foo,bar\n3,1,2", d3.autoType), {x: "metric", y: "Quality"})
+    groupKey = data.columns[0]
+    keys = data.columns.slice(1)
+    margin = ({top: 10, right: 10, bottom: 20, left: 40})
+    height = 500
+    width = 600
+    yAxis = g => g
+    .attr("transform", `translate(${margin.left},0)`)
+    .call(d3.axisLeft(y).ticks(null, "s"))
+    .call(g => g.select(".domain").remove())
+    .attr("font-size", "larger")
+    .call(g => g.select(".tick:last-of-type text").clone()
+        .attr("x", 3)
+        .attr("text-anchor", "start")
+        .attr("font-weight", "bold")
+        .attr("font-size", "larger")
+         .text(data.y))
+         xAxis = g => g
+    .attr("transform", `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(x0).tickSizeOuter(0))
+    .call(g => g.select(".domain").remove())
+    .attr("font-size", "x-large")
+    color = d3.scaleOrdinal()
+    .range(["#a85432","#7074b8","#39ff2b","#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"])
+    y = d3.scaleLinear()
+    .domain([0, d3.max(data, d => d3.max(keys, key => d[key]))]).nice()
+    .rangeRound([height - margin.bottom, margin.top])
+    x0 = d3.scaleBand()
+    .domain(data.map(d => d[groupKey]))
+    .rangeRound([margin.left, width - margin.right])
+    .paddingInner(0.1)
+    x1 = d3.scaleBand()
+    .domain(keys)
+    .rangeRound([0, x0.bandwidth()])
+    .padding(0.05)
+    legend = svg => {
+  const g = svg
+      .attr("transform", `translate(${width},0)`)
+      .attr("text-anchor", "end")
+      .attr("font-family", "sans-serif")
+      .attr("font-size", 10)
+    .selectAll("g")
+    .data(color.domain().slice().reverse())
+    .join("g")
+      .attr("transform", (d, i) => `translate(0,${i * 20})`);
+
+  g.append("rect")
+      .attr("x", -19)
+      .attr("width", 19)
+      .attr("height", 19)
+      .attr("fill", color);
+
+  g.append("text")
+      .attr("x", -24)
+      .attr("y", 9.5)
+      .attr("dy", "0.35em")
+      .attr("font-size","x-large")
+      .text(d => d);
+    }
+    
+     const svg = d3.select("body").selectAll("svg");
+
+    svg.append("g")
+    .selectAll("g")
+    .data(data)
+    .join("g")
+      .attr("transform", d => `translate(${x0(d[groupKey])},0)`)
+    .selectAll("rect")
+    .data(d => keys.map(key => ({key, value: d[key]})))
+    .join("rect")
+      .attr("x", d => x1(d.key))
+      .attr("y", d => y(d.value))
+      .attr("width", x1.bandwidth())
+      .attr("height", d => y(0) - y(d.value))
+      .attr("fill", d => color(d.key));
+
+  svg.append("g")
+      .call(xAxis);
+  svg.append("g")
+      .call(yAxis);
+
+  svg.append("g")
+      .call(legend);
+
+</script>
+
+
+<p class="MsoNormal">PS: browsing on the computer will give you a better view of this visualization</p>
+
+<p class="MsoNormal"><o:p>&nbsp;</o:p></p>
+
+<p class="MsoNormal">What if we want to do some math for the website?</p>
+
+<p class="MsoNormal">
+    
+        When $a \ne 0$, there are two solutions to \(ax^2 + bx + c = 0\) and they are
+        $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
+        $$∫\frac{x}{\sec   x + 1}dx = uv - ∫ vdu = x^2-x\tan \left(x/2\right) -∫ x-\tan \left(x/2\right) dx$$
+    
+</p>
+
+<p class="MsoNormal"><o:p>&nbsp;</o:p></p>
+
+<h1>How the website itself is generated?</h1>
+
+<p class="MsoNormal"><o:p>&nbsp;</o:p></p>
+
+<p class="MsoNormal">The posts are written by me. However, to embed the posts
+into archive format, I have incorporated a simple python program to automate
+the job for me. I will post the <span class="SpellE">github</span> link shortly.</p>
+
+</div>
