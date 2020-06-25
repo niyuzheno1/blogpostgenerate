@@ -1,0 +1,75 @@
+<div class=WordSection1>
+
+<p class=MsoNormal>This project is about kernel debugging. The goal of this
+project is to design a generic system internal debugger for any type of
+operating system (including Linux, Windows, OS X, etc.) It will run as the
+first program being loaded into memory. It supports VGA and other type of video
+output. That means it will have a GUI interface like what we see in <a
+href="https://en.wikipedia.org/wiki/SoftICE"><span class=SpellE>SoftICE</span></a>,
+<span class=SpellE>Syser</span>, <a
+href="https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/debugger-download-tools"><span
+class=SpellE>Windbg</span></a>, <a href="http://bugchecker.com/"><span
+class=SpellE>BugChecker</span></a>. Among these <span class=SpellE>softwares</span>,
+some of them are open-sourced but some of them are not. Some of them like <span
+class=SpellE>SoftICE</span> has been discontinued to be developed. </p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>In this project, my kernel debugger will support not only
+the functionalities that the traditional kernel debugger has supported. The
+best part about my project is that it has different interfaces so that people
+can test freely with different operating system’s kernels. For interfaces, I
+mean Graphic Interfaces. For example, <span class=SpellE>Sysers</span> provide
+a modern interface to do native kernel debugging compared with <span
+class=SpellE>SoftICE</span>. However, my debugger not only will have fancy
+interface for native. It also supports over the internet or remote debugging. My
+kernel debugger will provide a web interface for local debugging with a python
+server running on laptop where the testing virtual machine resides. The python
+server translates messages from <span class=SpellE>socketio</span> to serial
+port that connected to related virtual machine. It will also forward messages
+from the client virtual machine to the web page running under JavaScript. If
+virtual machine does not have proper COM port set up, or you simply want to
+debug a machine over the internet. The web-based kernel debugger can also
+contact them over the Internet via TCP/IP protocol.</p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>Another fascinating feature of my kernel debugger is that it
+supports time travel over the kernel. Yeah. I am not joking. It is kernel-based
+time travel. How does it work? Well, we all know application-based time travel
+from <span class=SpellE>Windbg</span>. For kernel-based time travel, the
+programmer needs to attach an external hard drive or storage or blob, such as
+USB. And when starting the debugger, it will automatically delete all the
+information in the specific storage chosen by user for time travel purpose
+(under certain conditions). If the storage format does not fit kernel debugger’s
+appetite, it will format the whole storage to be of its file system. Why do we
+do this? We do this to keep the trace of instruction executions and register
+information etc. into the storage. We can do time travel easily through the
+storage. Although it can restore register and memory state easily. It is not
+quite possible for us to restore devices information (kernel has operation on
+interrupts and IO port output) and we also need to notice that we may have
+external interrupts. It will change the hardware states too. It will add
+overhead to the operations because we are basically emulating the kernels like
+what we have in <span class=SpellE>Bochs</span>. But it is on top of the
+hardware.</p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>Another technique we will be implementing is that we will
+have preset breakpoints, which will be specified by user before the system is
+loading. It is like what we see in the case of <span class=SpellE>WinDBG</span>
+under remote kernel debugging. However, it is not what we have in native
+debuggers such as <span class=SpellE>BugChecker</span>.</p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>We will also make our debugger compatible for different
+operating systems so it can test them freely. </p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>If you are interested in this project, feel free to contact
+me by the links provided on the top of my website so that I will add you to my <span
+class=SpellE>github</span> repository. </p>
+
+</div>

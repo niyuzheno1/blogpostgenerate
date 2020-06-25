@@ -1,0 +1,410 @@
+<div class=WordSection1>
+
+<p class=MsoNormal>We propose a Docker file that supports windows docker under
+SSH. As we all know that <a href="https://www.docker.com/">Docker</a> has
+provided user experience to use containers that may or may not be native to the
+host machine’s architecture. For example, the windows server containers can be
+run under Windows education version. Or a Linux container can be run under Windows.
+However, there is a difference between windows Docker container and Windows Sandbox.
+The difference is that after closing Windows Sandbox, all your data will be
+lost. But for windows Docker container, you can specify persistent storage. Not,
+this is not the difference. You can still have <a
+href="https://www.thomasmaurer.ch/2019/05/how-to-configure-windows-sandbox/">share
+folders</a> under Windows Sandbox.</p>
+
+<p class=MsoNormal>The biggest differences between Windows Sandbox and Windows
+Docker Container is that you can use GUI inside Windows Sandbox. You can copy and
+paste file freely under Windows Sandbox, as an implication. Using an SSH for docker
+windows container become crucial under it. </p>
+
+<p class=MsoNormal>How do we setup an SSH connection? Here is the Docker file
+for setting up, where we thank <a href="https://hub.docker.com/u/rkttu/"><span
+class=SpellE>rkttu</span></a> for setting up <a
+href="https://hub.docker.com/r/rkttu/cygwin">Cygwin</a> environment for us.</p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:blue'>FROM</span><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>&nbsp;<span class=SpellE>rkttu</span>/cygwin:3.0.4-1809-full<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:blue'>SHELL</span><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>&nbsp;[</span><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:#A31515'>&quot;<span class=SpellE>powershell</span>&quot;</span><span
+style='font-size:10.5pt;font-family:Consolas;mso-fareast-font-family:"Times New Roman";
+mso-bidi-font-family:"Times New Roman";color:black'>,&nbsp;</span><span
+style='font-size:10.5pt;font-family:Consolas;mso-fareast-font-family:"Times New Roman";
+mso-bidi-font-family:"Times New Roman";color:#A31515'>&quot;-command&quot;</span><span
+style='font-size:10.5pt;font-family:Consolas;mso-fareast-font-family:"Times New Roman";
+mso-bidi-font-family:"Times New Roman";color:black'>]<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:12.0pt;line-height:14.25pt;background:
+white'><span style='font-size:10.5pt;font-family:Consolas;mso-fareast-font-family:
+"Times New Roman";mso-bidi-font-family:"Times New Roman";color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:blue'>RUN</span><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>&nbsp;Get-<span class=SpellE><span class=GramE>ExecutionPolicy</span></span><span
+class=GramE>&nbsp;;</span>&nbsp;\<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>Add-<span class=SpellE>WindowsCapability</span>&nbsp;-Online&nbsp;-Name&nbsp;<span
+class=SpellE>OpenSSH.Client</span><span class=GramE>*&nbsp;;</span>&nbsp;\<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>Set-Service&nbsp;-Name&nbsp;<span class=SpellE>wuauserv</span>&nbsp;-<span
+class=SpellE>StartupType</span>&nbsp;<span class=GramE>Automatic&nbsp;;</span>&nbsp;\<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>start-service&nbsp;<span class=SpellE><span class=GramE>wuauserv</span></span><span
+class=GramE>&nbsp;;</span>&nbsp;\<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>Add-WindowsCapability&nbsp;-Online&nbsp;-Name&nbsp;OpenSSH.Server~~~~0.0.1.<span
+class=GramE>0&nbsp;;</span>&nbsp;\<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>Start-Service&nbsp;<span class=SpellE><span class=GramE>sshd</span></span><span
+class=GramE>&nbsp;;</span>&nbsp;\<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>Set-Service&nbsp;-Name&nbsp;<span class=SpellE>sshd</span>&nbsp;-<span
+class=SpellE>StartupType</span>&nbsp;</span><span style='font-size:10.5pt;
+font-family:Consolas;mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:
+"Times New Roman";color:#A31515'>'Automatic'</span><span style='font-size:10.5pt;
+font-family:Consolas;mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:
+"Times New Roman";color:black'>;&nbsp;\<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span class=SpellE><span style='font-size:10.5pt;
+font-family:Consolas;mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:
+"Times New Roman";color:black'>secedit</span></span><span style='font-size:
+10.5pt;font-family:Consolas;mso-fareast-font-family:"Times New Roman";
+mso-bidi-font-family:"Times New Roman";color:black'>&nbsp;/export&nbsp;/<span
+class=SpellE>cfg</span>&nbsp;<span class=GramE>c:\secpol.cfg&nbsp;;</span>&nbsp;\<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>(gc&nbsp;C:\secpol.cfg<span class=GramE>).replace</span>(</span><span
+style='font-size:10.5pt;font-family:Consolas;mso-fareast-font-family:"Times New Roman";
+mso-bidi-font-family:"Times New Roman";color:#A31515'>\&quot;PasswordComplexity&nbsp;=&nbsp;1\&quot;,&nbsp;\&quot;PasswordComplexity&nbsp;=&nbsp;0\&quot;)&nbsp;|&nbsp;Out-File&nbsp;C:\secpol.cfg&nbsp;;\</span><span
+style='font-size:10.5pt;font-family:Consolas;mso-fareast-font-family:"Times New Roman";
+mso-bidi-font-family:"Times New Roman";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:#A31515'>secedit&nbsp;/configure&nbsp;/db&nbsp;c:\windows\security\local.sdb&nbsp;/cfg&nbsp;c:\secpol.cfg&nbsp;/areas&nbsp;SECURITYPOLICY&nbsp;</span><span
+style='font-size:10.5pt;font-family:Consolas;mso-fareast-font-family:"Times New Roman";
+mso-bidi-font-family:"Times New Roman";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:blue'>RUN</span><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:#A31515'>&nbsp;rm&nbsp;-force&nbsp;c:\secpol.cfg&nbsp;-<span class=GramE>confirm:$</span>false&nbsp;;\&nbsp;</span><span
+style='font-size:10.5pt;font-family:Consolas;mso-fareast-font-family:"Times New Roman";
+mso-bidi-font-family:"Times New Roman";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:#A31515'>New-LocalUser&nbsp;\&quot;zachni\&quot;&nbsp;-Password&nbsp;(ConvertTo-SecureString&nbsp;\&quot;1234\&quot;&nbsp;-AsPlainText&nbsp;-Force)&nbsp;-FullName&nbsp;\&quot;ZY\&quot;&nbsp;-Description&nbsp;\&quot;Description&nbsp;of&nbsp;the&nbsp;account\<span
+class=GramE>&quot;&nbsp;;</span>\</span><span style='font-size:10.5pt;
+font-family:Consolas;mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:
+"Times New Roman";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:#A31515'>Add-<span class=SpellE>LocalGroupMember</span>&nbsp;-Group&nbsp;&quot;Administrators&quot;&nbsp;-Member&nbsp;&quot;<span
+class=SpellE>zachni</span><span class=GramE>&quot;&nbsp;;</span></span><span
+style='font-size:10.5pt;font-family:Consolas;mso-fareast-font-family:"Times New Roman";
+mso-bidi-font-family:"Times New Roman";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>Intimidated? No problem. Let me explain each step by step.</p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:blue'>RUN</span><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>&nbsp;Get-<span class=SpellE>ExecutionPolicy</span>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>It tells which execution policy for the current user. If it
+shows up restricted, you need to set the execution policy to non-restricted.
+Since we <span class=GramE>aren’t</span> interested in using <span
+class=SpellE>ContainerAdministrator</span>, we don’t need to care too much
+about it.</p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>Add-<span class=SpellE>WindowsCapability</span>&nbsp;-Online&nbsp;-Name&nbsp;<span
+class=SpellE>OpenSSH.Client</span><span class=GramE>*&nbsp;;</span>&nbsp;\<o:p></o:p></span></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>It helps us to down OpenSSH client under Docker Windows
+Container.</p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>Set-Service&nbsp;-Name&nbsp;<span class=SpellE>wuauserv</span>&nbsp;-<span
+class=SpellE>StartupType</span>&nbsp;<span class=GramE>Automatic&nbsp;;</span>&nbsp;\<o:p></o:p></span></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>Here we setup windows Update Service, which is a crucial
+service for OpenSSH Server. We set it as automatically start during startup.</p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>start-service&nbsp;<span class=SpellE><span class=GramE>wuauserv</span></span><span
+class=GramE>&nbsp;;</span>&nbsp;\<o:p></o:p></span></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>We start our Windows Update Service.</p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>Add-WindowsCapability&nbsp;-Online&nbsp;-Name&nbsp;OpenSSH.Server~~~~0.0.1.<span
+class=GramE>0&nbsp;;</span>&nbsp;\<o:p></o:p></span></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>We install OpenSSH Server on our docker container.</p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>Start-Service&nbsp;<span class=SpellE><span class=GramE>sshd</span></span><span
+class=GramE>&nbsp;;</span>&nbsp;\<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>Set-Service&nbsp;-Name&nbsp;<span class=SpellE>sshd</span>&nbsp;-<span
+class=SpellE>StartupType</span>&nbsp;</span><span style='font-size:10.5pt;
+font-family:Consolas;mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:
+"Times New Roman";color:#A31515'>'Automatic'</span><span style='font-size:10.5pt;
+font-family:Consolas;mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:
+"Times New Roman";color:black'>;&nbsp;\<o:p></o:p></span></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>Start the service and run it automatically during startup.</p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span class=SpellE><span style='font-size:10.5pt;
+font-family:Consolas;mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:
+"Times New Roman";color:black'>secedit</span></span><span style='font-size:
+10.5pt;font-family:Consolas;mso-fareast-font-family:"Times New Roman";
+mso-bidi-font-family:"Times New Roman";color:black'>&nbsp;/export&nbsp;/<span
+class=SpellE>cfg</span>&nbsp;<span class=GramE>c:\secpol.cfg&nbsp;;</span>&nbsp;\<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>(gc&nbsp;C:\secpol.cfg<span class=GramE>).replace</span>(\&quot;PasswordComplexity&nbsp;=&nbsp;1\&quot;,&nbsp;\&quot;PasswordComplexity&nbsp;=&nbsp;0\&quot;)&nbsp;|&nbsp;Out-File&nbsp;C:\secpol.cfg&nbsp;;\<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>secedit&nbsp;/configure&nbsp;/db&nbsp;c:\windows\security\local.sdb&nbsp;/cfg&nbsp;c:\secpol.cfg&nbsp;/areas&nbsp;SECURITYPOLICY&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:blue'>RUN</span><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:#A31515'>&nbsp;</span><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>rm&nbsp;-force&nbsp;c:\secpol.cfg&nbsp;-<span class=GramE>confirm:$</span>false&nbsp;;\</span><span
+style='font-size:10.5pt;font-family:Consolas;mso-fareast-font-family:"Times New Roman";
+mso-bidi-font-family:"Times New Roman";color:#A31515'>&nbsp;<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:#A31515'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='color:black;mso-color-alt:windowtext'>Here
+we change password complexity requirement. Without doing so, <span class=GramE>it’s</span>
+impossible for us to setup user password.</span><span style='font-size:10.5pt;
+font-family:Consolas;mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:
+"Times New Roman";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>New-LocalUser&nbsp;\&quot;zachni\&quot;&nbsp;-Password&nbsp;(ConvertTo-SecureString&nbsp;\&quot;1234\&quot;&nbsp;-AsPlainText&nbsp;-Force)&nbsp;-FullName&nbsp;\&quot;ZY\&quot;&nbsp;-Description&nbsp;\&quot;Description&nbsp;of&nbsp;the&nbsp;account\<span
+class=GramE>&quot;&nbsp;;</span>\<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+14.25pt;background:white'><span style='font-size:10.5pt;font-family:Consolas;
+mso-fareast-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman";
+color:black'>Add-<span class=SpellE>LocalGroupMember</span>&nbsp;-Group&nbsp;&quot;Administrators&quot;&nbsp;-Member&nbsp;&quot;<span
+class=SpellE>zachni</span><span class=GramE>&quot;&nbsp;;</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>Now we add our user, in my case, <span class=GramE>it’s</span>
+<span class=SpellE>zachni</span> as username. The password is easy to remember,
+(i.e. 1234). Now you are eligible to use SSH to login into your container. </p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>However, there is one thing the container <span class=GramE>can’t</span>
+do. It’s <span class=SpellE>Xforwarding</span> as specified in <a
+href="https://docs.microsoft.com/en-us/windows-server/administration/openssh/openssh_server_configuration">Microsoft
+Document</a>. But it brings us closer to use GUI inside container (we can reprogram
+Gdi32.dll or User32.dll to make them container friendly and <span class=SpellE>Xforward</span>
+the related information). But <span class=GramE>it’s</span> still quite cool
+for us to use SSH inside the container. We can use Visual Studio Code to connect
+to our container remotely.</p>
+
+<p class=MsoNormal><span style='mso-no-proof:yes'><!--[if gte vml 1]><v:shapetype
+ id="_x0000_t75" coordsize="21600,21600" o:spt="75" o:preferrelative="t"
+ path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f">
+ <v:stroke joinstyle="miter"/>
+ <v:formulas>
+  <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+  <v:f eqn="sum @0 1 0"/>
+  <v:f eqn="sum 0 0 @1"/>
+  <v:f eqn="prod @2 1 2"/>
+  <v:f eqn="prod @3 21600 pixelWidth"/>
+  <v:f eqn="prod @3 21600 pixelHeight"/>
+  <v:f eqn="sum @0 0 1"/>
+  <v:f eqn="prod @6 1 2"/>
+  <v:f eqn="prod @7 21600 pixelWidth"/>
+  <v:f eqn="sum @8 21600 0"/>
+  <v:f eqn="prod @7 21600 pixelHeight"/>
+  <v:f eqn="sum @10 21600 0"/>
+ </v:formulas>
+ <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+ <o:lock v:ext="edit" aspectratio="t"/>
+</v:shapetype><v:shape id="Picture_x0020_1" o:spid="_x0000_i1027" type="#_x0000_t75"
+ style='width:468pt;height:342pt;visibility:visible;mso-wrap-style:square'>
+ <v:imagedata src="Windows%20Docker%20Under%20SSH_files/image001.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=624 height=456
+src="Windows%20Docker%20Under%20SSH_files/image002.jpg" v:shapes="Picture_x0020_1"><![endif]></span></p>
+
+<p class=MsoNormal>Fig 1. SSH into the container under Putty</p>
+
+<p class=MsoNormal><span style='mso-no-proof:yes'><!--[if gte vml 1]><v:shape
+ id="Picture_x0020_2" o:spid="_x0000_i1026" type="#_x0000_t75" style='width:467.25pt;
+ height:356.25pt;visibility:visible;mso-wrap-style:square'>
+ <v:imagedata src="Windows%20Docker%20Under%20SSH_files/image003.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=623 height=475
+src="Windows%20Docker%20Under%20SSH_files/image004.jpg" v:shapes="Picture_x0020_2"><![endif]></span></p>
+
+<p class=MsoNormal>Fig 2. Visual Studio SSH into the container</p>
+
+<p class=MsoNormal><span style='mso-no-proof:yes'><!--[if gte vml 1]><v:shape
+ id="Picture_x0020_3" o:spid="_x0000_i1025" type="#_x0000_t75" style='width:468pt;
+ height:79.5pt;visibility:visible;mso-wrap-style:square'>
+ <v:imagedata src="Windows%20Docker%20Under%20SSH_files/image005.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=624 height=106
+src="Windows%20Docker%20Under%20SSH_files/image006.jpg" v:shapes="Picture_x0020_3"><![endif]></span><o:p></o:p></p>
+
+<p class=MsoNormal>Fig 3. WinSCP into the container<o:p></o:p></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>Now let us talk about accessing container windows APP. So far
+what I have tried to make GUI Application viewable outside the container. I tried
+to get HDC (handle of device context) from the desktop. However, I failed to do
+so. It gave me a black blank bitmap after reading from HDC returned by <span
+class=SpellE>GetHDC</span>. Now I will consult to see if I can do anything related
+to Windows Host Compute Service (HCS). <span class=SpellE>Github</span> has pretty
+good wrapper or launcher or shim for HCS called <a
+href="https://github.com/microsoft/hcsshim">HCSSHIM</a>. I will look at it in
+near future to see if I can do anything. I will also investigate the <a
+href="https://mobyproject.org/">Moby</a> project, the backend of the Docker Desktop.
+However, all these projects will be like Windows 98. They will pass <span
+class=GramE>away</span> and it’s quite important to remember what we did and
+how we did to understand what’s the principals so that in future when
+encountering the same problem, we can expand it.</p>
+
+<p class=MsoNormal>If you have any technical difficulties, feel free to email
+or contact me or direct message me on my social media.</p>
+
+</div>
